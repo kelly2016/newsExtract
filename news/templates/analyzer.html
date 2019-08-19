@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)http://ltp.ai/demo.html -->
+<html lang="en" class=" js cssanimations csstransitions">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=1800px">
+    <meta name="description" content="在线演示平台">
+    <meta name="author" content="cosmic">
+    <meta name="keywords" content="在线演示平台">
+    <!--<link rel="shortcut icon" href="http://ltp.ai/img/favicon.png"> -->
+
+    <title>
+      在线演示平台
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='theme.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-reset.css') }}">
+
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!--external css-->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='flexslider.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery.bxslider.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='animate.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='owl.carousel.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='owl.theme.css') }}">
+
+
+    <link href="http://ltp.ai/css/superfish.css">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style-responsive.css') }}">
+
+
+    <!-- User css -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='demo.css') }}">
+
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='parallax-slider.css') }}">
+
+    <script type=text/javascript  src="{{ url_for('static', filename='modernizr.custom.28468.js') }}">
+
+    </script>
+<script>
+
+
+
+
+ </script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js">
+    </script>
+    <script src="js/respond.min.js">
+    </script>
+    <![endif]-->
+  <style type="text/css">.dropdown-submenu:hover>.dropdown-menu{display:none}</style>
+<style>
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+</style>
+
+</head>
+<body>
+<!-- Head END
+================================================== -->
+<!--header start-->
+<header class="head-section">
+
+</header>
+<!--header end-->
+
+  <!--breadcrumbs start-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-sm-6">
+          <h1>
+            在线演示
+
+          </h1>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<!--breadcrumbs end-->
+
+  <div class="container demo">
+    <div class="dis-wrapper">
+        <div class="row">
+            <form action="{{ url_for('analyse') }}" method=post>
+            <div class="col-md-9 col-sm-9">
+                <textarea class="form-control" rows="4" id="inputText" name="inputText">{{inputContent}}</textarea>
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <div class=" keep-margin-top-10px" style="text-align : center">
+                    <select class="form-control" id="sentSelect" name="sentSelect">
+                        <option value="list">抽取列表</option>
+                        {% if isSelected == 'relationship' %}
+                            <option value="relationship" selected="selected">抽取关系</option>
+                        {% else %}
+                            <option value="relationship" >抽取关系</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class=" keep-margin-top-10px" style="text-align : center">
+                    <button type="submit" class="btn btn-default btn-small form-control" id="analysis" name="analysis">分析</button>
+                </div>
+            </div>
+            </form>¸
+
+        </div>
+        <div class="row">
+            <div id="mask" class="col-md-12 col-sm-12" style="display: none;">
+                <div id="usingManual" style="display: none;">
+                    <h2>使用说明</h2> <!-- At First , it display -->
+                    <p>1. 选择<code>示例文字</code>或在<code>输入框</code>中输入要分析的文字</p>
+                    <p>2. 点击<code>分析</code>按钮</p>
+                </div>
+                <div id="loadingTag" style="left: 273px; display: block;"> <!-- At First , it hidden -->
+                    <span class="text-info">分析中...如果长时间无反应，请点击<code>分析</code>重试.</span>
+                </div>
+            </div>
+        </div>
+        <div id="analysisPanel" style="display: block;">
+            <div class="row keep-margin-top-20px">
+                <div class="col-md-12 col-sm-12">
+                    <ul class="nav nav-tabs" role="tablist" id="viewTab">
+                        <li role="presentation" class="active">
+                        <a id="sent-tab" role="tab" aria-expanded="true" aria-controls="sent" href="#sent" data-toggle="tab">分析结果</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="col-md-2 col-sm-2" style=" display : none ;">
+                    <div class="btn-group width-control-60">
+                        <button type="button" class="btn btn-default btn-mini">显示XML</button>
+                        <button type="button" class="btn btn-default btn-mini">加载本地</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="viewContent">
+                <div class="tab-pane active" id="sent" role="tabpanel" aria-labelledby="sent-tab">
+                    <div class="row">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                        {% if isSelected == 'list' %}
+                            <div class="analysis-wrapper">
+                                <ul id="analysisContent">
+
+                                     {% for extractedItem in extractedlist %}
+                                    <li>
+
+                                        <div class="text-item" x="0" y="0">{{extractedItem[0] }}</div>
+                                        <div class="canvasContainer" style="height: 65px;">
+                                           <!--<canvas id="" width="860" height="500" style="cursor: default;"></canvas>-->
+                                            <textarea name=text rows=3 cols=120>{{ extractedItem[1]}}</textarea>
+                                        </div>
+                                    </li>
+
+                                     {% endfor %}
+
+
+ß
+                                </ul>
+                            </div>
+                         {% elif  isSelected == 'relationship' %}
+                                       {% include "relationship.html" %}
+                         {% else %}
+                            <div class="analysis-wrapper">
+                                <ul id="analysisContent">
+
+                                </ul>
+                            </div>
+                         {% endif%}
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="push"></div>
+</div>
+
+
+
+
+
+  <!--small footer start -->
+  <footer class="footer-small">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-6 col-sm-6 pull-right">
+                  <ul class="social-link-footer list-unstyled">
+
+                  </ul>
+              </div>
+              <div class="col-md-4" style="margin-top: 5px;">
+                <div class="copyright">
+                </div>
+              </div>
+          </div>
+      </div>
+  </footer>
+  <!--small footer end-->
+
+    <script src="{{ url_for('static', filename='jquery-1.8.3.min.js') }} ">
+    </script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }} ">
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='hover-dropdown.js') }}">
+    </script>
+    <script defer="" src="{{ url_for('static', filename='jquery.flexslider.js') }} ">
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.bxslider.js') }} ">
+    </script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.parallax-1.1.3.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='wow.min.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='owl.carousel.js') }}">
+    </script>
+
+    <script src="{{ url_for('static', filename='jquery.easing.min.js') }}">
+    </script>
+    <script src="{{ url_for('static', filename='link-hover.js')}}">
+    </script>
+    <script src="{{ url_for('static', filename='superfish.js')}}">
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.cslider.js')}}">
+    </script>
+    <script type="text/javascript">
+      $(function() {
+
+        $('#da-slider').cslider({
+          autoplay    : true,
+          bgincrement : 100
+        });
+
+      });
+    </script>
+
+
+
+    <!--common script for all pages-->
+    <script src="{{ url_for('static', filename='common-scripts.js')}} ">
+    </script>
+
+    <script type="text/javascript">
+      jQuery(document).ready(function() {
+
+
+        $('.bxslider1').bxSlider({
+          minSlides: 5,
+          maxSlides: 6,
+          slideWidth: 360,
+          slideMargin: 2,
+          moveSlides: 1,
+          responsive: true,
+          nextSelector: '#slider-next',
+          prevSelector: '#slider-prev',
+          nextText: 'Onward →',
+          prevText: '← Go back'
+        });
+
+      });
+
+
+    </script>
+
+    <script>
+      $('a.info').tooltip();
+
+      $(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "slide",
+          start: function(slider) {
+            $('body').removeClass('loading');
+          }
+        });
+      });
+
+      $(document).ready(function() {
+
+        $("#owl-demo").owlCarousel({
+
+          items : 4
+
+        });
+
+      });
+
+      jQuery(document).ready(function(){
+        jQuery('ul.superfish').superfish();
+      });
+
+      new WOW().init();
+    </script>
+
+
+      <script type="text/javascript" src="{{ url_for('static', filename='jsobj_extension.js')}} "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='draw_obj.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='label_explanation_data.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='label_explanation_panel.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='draw_sent_view.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='draw_para_view.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='XAndJConverter.js')}}  "></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='draw_load.js"')}}  ></script>
+
+
+
+<!-- foot.html end--></body></html>
